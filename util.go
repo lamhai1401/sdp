@@ -293,6 +293,19 @@ func (s *SessionDescription) GetPayloadTypeForCodec(wanted Codec) (uint8, error)
 	return 0, errCodecNotFound
 }
 
+func (s *SessionDescription) GetPayloadTypeForCodecs(wanted Codec) ([]uint8, error) {
+	codecs := s.buildCodecMap()
+	temp := make([]uint8, 0)
+
+	for payloadType, codec := range codecs {
+		if codecsMatch(wanted, codec) {
+			temp = append(temp, payloadType)
+		}
+	}
+
+	return temp, errCodecNotFound
+}
+
 type stateFn func(*lexer) (stateFn, error)
 
 type lexer struct {
